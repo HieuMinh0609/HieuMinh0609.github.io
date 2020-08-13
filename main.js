@@ -53,7 +53,7 @@ socket.on('DANG_KY_THAT_BAI',() =>{
 })
 
 function showAll(users){
-    $('.removeStreamPerson').append(`video class="col-md-4" id="${users[0].peerId}" width="300" controls></video>`)
+    $('.removeStreamPerson').append('<video class="col-md-4" id="'+users[0].peerId+'" width="300" controls></video>')
     if(users.length!==1){
         openStream()
         .then(stream => {
