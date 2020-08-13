@@ -3,7 +3,7 @@
 $('#div-chat').hide();
 
 
-var customConfig;
+let customConfig;
 $.ajax({
     url: "https://service.xirsys.com/ice",
     data: {
