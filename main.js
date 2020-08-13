@@ -26,7 +26,7 @@ $.ajax({
 socket.on('DANH_SACH_ONLINE',users =>{
     $('#div-chat').show();
     $('#div-dang-ky').hide();
-   
+   var userss = users;
     users.forEach(user => {
         const {ten ,peerId} = user;
         $('#listUser').append(`<li id="${peerId}">${ten}</li>`)
@@ -34,13 +34,10 @@ socket.on('DANH_SACH_ONLINE',users =>{
 
     socket.on('CO_NGUOI_MOI',user =>{
         const {ten ,peerId} = user;
-
-     
-
         $('#listUser').append(`<li id="${peerId}">${ten}</li>`);
-     
+        showAll(userss,user);
     })
-    showAll(users)
+  
     socket.on('AI_DO_NGAT_KET_NOI',id =>{
         console.log(id);
         console.log(`#${id}`);
@@ -52,14 +49,14 @@ socket.on('DANG_KY_THAT_BAI',() =>{
     alert('fail!')
 })
 
-function showAll(users){
-    $('.removeStreamPerson').append('<video class="col-md-4" id="'+users[0].peerId+'" width="300" controls></video>')
+function showAll(users,user){
+    $('.removeStreamPerson').append('<video class="col-md-4" id="'+user.peerId+'" width="300" controls></video>')
     if(users.length!==1){
         openStream()
         .then(stream => {
             playStream('localStream',stream);
             const call = peer.call(users[0].peerId,stream);
-            call.on('stream',remoteStream => playStream(`${users[0].peerId}`,remoteStream));
+            call.on('stream',remoteStream => playStream(`${user.peerId}`,remoteStream));
         });
     }
    
