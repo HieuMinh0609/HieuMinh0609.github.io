@@ -3,7 +3,7 @@
 $('#div-chat').hide();
 
 
-let customConfig;
+var customConfig;
 $.ajax({
     url: "https://service.xirsys.com/ice",
     data: {
@@ -34,7 +34,11 @@ socket.on('DANH_SACH_ONLINE',users =>{
 
     socket.on('CO_NGUOI_MOI',user =>{
         const {ten ,peerId} = user;
-        $('#listUser').append(`<li id="${peerId}">${ten}</li>`)
+
+     
+
+        $('#listUser').append(`<li id="${peerId}">${ten}</li>`);
+        showAll(ten ,peerId)
     })
  
     socket.on('AI_DO_NGAT_KET_NOI',id =>{
@@ -48,6 +52,16 @@ socket.on('DANG_KY_THAT_BAI',() =>{
     alert('fail!')
 })
 
+function showAll(ten ,peerId){
+    $('.removeStreamPerson').append(`video class="col-md-4" id="${peerId}" width="300" controls></video>`)
+    
+    openStream()
+    .then(stream => {
+        playStream('localStream',stream);
+        const call = peer.call(peerId,stream);
+        call.on('stream',remoteStream => playStream(`${peerId}`,remoteStream));
+    });
+}
 
 
 function openStream(){
@@ -68,7 +82,7 @@ function playStream(idVideoTag,stream){
 
 //const peer = new Peer();
 //const peer = new Peer({key:'peerjs',host:'sream-3005.herokuapp.com',secure:true,port:443});
-const peer = new Peer({host:'sream-3005.herokuapp.com',secure:true,port:443,config:customConfig});
+const peer = new Peer({key:'peerjs',host:'sream-3005.herokuapp.com',secure:false,port:443,config:customConfig});
 peer.on('open',id=>{
     $('#my-peer').append(id)
     $('#btnSignUp').click(() =>{
