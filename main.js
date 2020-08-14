@@ -1,5 +1,5 @@
- //const socket = io('https://stream301.herokuapp.com/');
- const socket = io('http://localhost:3000/');
+const socket = io('https://stream301.herokuapp.com/');
+ //const socket = io('http://localhost:3000/');
 
 $('#div-chat').hide();
 
@@ -67,9 +67,9 @@ function playStream(idVideoTag,stream){
 // openStream()
 // .then(stream => playStream('localStream',stream))
 
- const peer = new Peer();
+ //const peer = new Peer();
 //const peer = new Peer({key:'peerjs',host:'sream-3005.herokuapp.com',secure:true,port:443});
-//const peer = new Peer({host:'sream-3005.herokuapp.com',secure:true,port:443,config:customConfig});
+ const peer = new Peer({host:'sream-3005.herokuapp.com',secure:true,port:443,config:customConfig});
 peer.on('open',id=>{
     $('#my-peer').append(id)
     $('#btnSignUp').click(() =>{
