@@ -3,7 +3,7 @@
 
 $('#div-chat').hide();
 
-
+var usersAll = null;
 let customConfig;
 $.ajax({
     url: "https://service.xirsys.com/ice",
@@ -27,7 +27,7 @@ $.ajax({
 socket.on('DANH_SACH_ONLINE',users =>{
     $('#div-chat').show();
     $('#div-dang-ky').hide();
-   
+    usersAll = users
     users.forEach(user => {
         const {ten ,peerId} = user;
         $('#listUser').append(`<li id="${peerId}">${ten}</li>`)
@@ -67,9 +67,9 @@ function playStream(idVideoTag,stream){
 // openStream()
 // .then(stream => playStream('localStream',stream))
 
-//const peer = new Peer();
+ //const peer = new Peer();
 //const peer = new Peer({key:'peerjs',host:'sream-3005.herokuapp.com',secure:true,port:443});
- const peer = new Peer({host:'sream-3005.herokuapp.com',secure:true,port:443,config:customConfig});
+const peer = new Peer({host:'sream-3005.herokuapp.com',secure:true,port:443,config:customConfig});
 peer.on('open',id=>{
     $('#my-peer').append(id)
     $('#btnSignUp').click(() =>{
@@ -83,8 +83,11 @@ $('#btnCall').click(()=>{
     openStream()
     .then(stream => {
         playStream('localStream',stream);
-        const call = peer.call(id,stream);
-        call.on('stream',remoteStream => playStream('remoteStream',remoteStream));
+        if(usersAll.lenght!==1){
+            const call = peer.call(usersAll[0].peerId,stream);
+            call.on('stream',remoteStream => playStream('remoteStream',remoteStream));
+        }
+       
     });
 })
 
