@@ -1,5 +1,5 @@
  const socket = io('https://stream301.herokuapp.com/');
-
+ //const socket = io('http://localhost:3000');
 $('#div-chat').hide();
 
 
@@ -30,6 +30,7 @@ socket.on('DANH_SACH_ONLINE',users =>{
     users.forEach(user => {
         const {ten ,peerId} = user;
         $('#listUser').append(`<li id="${peerId}">${ten}</li>`)
+        showAll(users,user)
     });
 
     socket.on('CO_NGUOI_MOI',user =>{
@@ -42,6 +43,7 @@ socket.on('DANH_SACH_ONLINE',users =>{
         console.log(id);
         console.log(`#${id}`);
         $(`#${id}`).remove();
+        $(`#remote${id}`).remove();
      })
 });
 
@@ -50,14 +52,36 @@ socket.on('DANG_KY_THAT_BAI',() =>{
 })
 
 function showAll(users,user){
-    $('.removeStreamPerson').append('<video class="col-md-4" id="'+user.peerId+'" width="300" controls></video>')
+   
     if(users.length!==1){
+        $('.removeStreamPerson').append('<video style="margin-right:10px" class="col-md-4" id="remote'+user.peerId+'" width="300" controls></video>')
+        console.log(user.peerId)
+        console.log(users[0].peerId)
         openStream()
         .then(stream => {
             playStream('localStream',stream);
             const call = peer.call(users[0].peerId,stream);
-            call.on('stream',remoteStream => playStream(`${user.peerId}`,remoteStream));
+            call.on('stream',remoteStream => playStream("remote"+user.peerId,remoteStream));
+
+            peer.on('call',call => {
+                openStream()
+                .then(stream => {
+                    call.answer(stream);
+                    playStream('localStream',stream);
+                    call.on('stream',remoteStream => playStream("remote"+user.peerId,remoteStream));
+                })
+            })
         });
+    }
+    else{
+        peer.on('call',call => {
+            openStream()
+            .then(stream => {
+                call.answer(stream);
+                playStream('localStream',stream);
+               // call.on('stream',remoteStream => playStream("remote"+user.peerId,remoteStream));
+            })
+        })
     }
    
 }
@@ -100,12 +124,12 @@ $('#btnCall').click(()=>{
     });
 })
 
-peer.on('call',call => {
-    openStream()
-    .then(stream => {
-        call.answer(stream);
-        playStream('localStream',stream);
-        call.on('stream',remoteStream => playStream('remoteStream',remoteStream));
-    })
-})
+// peer.on('call',call => {
+//     openStream()
+//     .then(stream => {
+//         call.answer(stream);
+//         playStream('localStream',stream);
+//         call.on('stream',remoteStream => playStream('remoteStream',remoteStream));
+//     })
+// })
 
