@@ -1,6 +1,6 @@
-const socket = io('https://stream301.herokuapp.com/');
+const socket = io('http://elearning-uat.vnpost.vn/stream');
 
-//const socket = io('http://elearning-uat.vnpost.vn/stream/');
+
 $('#div-chat').hide();
 
 var usersAll = null;
